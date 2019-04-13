@@ -60,25 +60,27 @@ extension Array
 
 
 class GameScene: SKScene {
+    var slots = [WhackSlot]()       //Un array nous permettant de stocker toutes nos fenêtres
+    var gameScore: SKLabelNode!     //Label du score
+    var gameTimer: SKLabelNode!     //Label du timer
     
+    var popupTime = 2.35            //Temps d'affichage des objets
     
-    
-    
-    
-    
-    
-    var slots = [WhackSlot]()   //Un array nous permettant de stocker toutes nos fenêtres
-    var gameScore: SKLabelNode! //Label du score
-    
-    var popupTime = 0.85    //Temps d'affichage des objets
-    
-    var score = 0 {         //Variable qui contiendra notre score
+    var score = 0 {                 //Variable qui contiendra le score
         didSet {
             gameScore.text = "\(score)"
         }
     }
     
-    var numRounds = 0   //numRounds correspond au nombre d'entitées touchées, que ce soit des les bons ou les mauvais, plus bas on définira le nombre maximum d'entitées, c'est lui qui controllera si le jeu est terminé ou non
+    
+    var temps = 0 {                 //Variable qui contiendra le temps
+        didSet {
+            gameTimer.text = "\(temps)"
+        }
+    }
+    
+    var chrono = Timer()            //On déclare une variable chrono qui est Timer, cela nous permettra de gérer plusieurs paramètre plus bas comme le nombre de secondes entre les déclenchements du timer
+
 
 
     override func didMove(to view: SKView) {
@@ -88,15 +90,23 @@ class GameScene: SKScene {
         background.position = CGPoint(x: 0, y: 0)   //On définie les coordonées de l'arrière plan
         background.blendMode = .replace             //blendeMode est une propriété qui décrit comment tous les "SpriteKit nodes" doivent être dessinés à l'écran. La valeur par défaut est ".alpha" qui signifie que l'image doit être dessiné pour que la transparence alpha soit respectée, on utilise ".replace" pour ignorer l'alpha dans la texture. Plus d'infos : https://www.hackingwithswift.com/example-code/games/how-to-made-an-skspritenode-render-faster-using-blendmode
         background.zPosition = -1
-        addChild(background)       //On ajoute l'arrière plan à notre ViewController, ici GameViewController
+        addChild(background)                                //On ajoute l'arrière plan à notre ViewController, ici GameViewController
         
         gameScore = SKLabelNode(fontNamed:"Chalkduster")    //On définit une police pour le texte
-        gameScore.text = "Score 0"                          //On définit notre texte
+        gameScore.text = "0"                                //On définit notre texte
         gameScore.position = CGPoint(x: -320, y: 580)       //On positionne le texte
         gameScore.horizontalAlignmentMode = .left           //On définit l'alignement horizontale
         gameScore.fontSize = 48                             //On définit la taille du texte
         addChild(gameScore)
         
+        //Même chose pour le temps
+        gameTimer = SKLabelNode(fontNamed:"Chalkduster")
+        gameTimer.text = "0"
+        gameTimer.position = CGPoint(x: -100, y: 580)
+        gameTimer.horizontalAlignmentMode = .center
+        gameTimer.fontSize = 48
+        addChild(gameTimer)
+        temps = 60
         
         //Les boucles ici correspondent à la création et à l'emplacement des fenêtres
         //On aura ici 5 lignes et 4 colonnes de fenêtres
@@ -112,9 +122,15 @@ class GameScene: SKScene {
             in self?.createEnemy()
         }
         
+        //selector: permet d'envoyer un message à la méthode gameChrono, lorsque le timer se déclenche
+        chrono = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(gameChrono), userInfo: nil, repeats: true)
+        
         
     }
     
+    //La méthode touhesBegan est une méthode généré lors de la création du projet
+    //Cet méthode gère la détection d'appuie sur l'écran
+    //On testera également, en parcourant la liste de tous les "node", si l'utilisateur a touché une bonne ou une mauvaise cible.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -131,73 +147,76 @@ class GameScene: SKScene {
                 score -= 5
             } else if node.name == "charEnemy"{
                 //Touche la bonne cible
-                whackSlot.charNode.xScale = 0.85
+                whackSlot.charNode.xScale = 0.85    //Lorsqu'on touche une bonne cible on change l'échelle juste pour montrer qu'on a touché la bonne cible
                 whackSlot.charNode.yScale = 0.85
                 score += 1
             }
         }
-        
     }
     
+    //Méthode qui permet de générer les fenêtres
     func createSlot(at position: CGPoint) {
-        let slot = WhackSlot()
+        let slot = WhackSlot()      //On référencie notre ficher WhackSlot.swift
         slot.configure(at: position)
         addChild(slot)
         slots.append(slot)
     }
     
-    
-    
-    func createEnemy() {
-        numRounds += 1
+    //Méthode qui gère le timer
+    @objc func gameChrono(){
+        temps -= 1
         
-        if numRounds >= 15 {
+        //On teste lorsque celui-ci atteint 0 on change de vue
+        if temps == 0 {
             for slot in slots {
                 slot.hide()
             }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "EndScene")   //On précise la vue qu'on veut atteindre, on attribue un ID à la vue dans le Main.storyboard
+            vc.view.frame = (self.view?.frame)!
+            vc.view.layoutIfNeeded()
             
-            let button = SKSpriteNode(imageNamed: "bouton-play")
-            let gameOver = SKSpriteNode(imageNamed: "")
-            gameOver.position = CGPoint(x: 128, y: 128)
-            gameOver.zPosition = 1
-            button.position = CGPoint(x: -256, y: 128)
-            addChild(gameOver)
-            addChild(button)
-            
-            
-
-            
-            
-            return
-            
+            //On choisit le type de transition
+            UIView.transition(with: self.view!, duration: 0.3,
+                              options: .transitionFlipFromRight, animations:
+                {
+                    self.view?.window?.rootViewController = vc
+            }, completion: { completed in
+                
+            })
+            return      //Return est important, sans lui le jeu continue de tourner (les cibles vont continuer à apparaitre
         }
-
+    }
+    
+    
+    
+    
+    //Méthode de la création des ennemis
+    //Ici, le temps sera également
+    @objc func createEnemy() {
+        //popupTime *= 1.085
+        popupTime *= 0.991
         
-        popupTime *= 1.085
+        slots.shuffle()                     //Randomizes the order of an array’s elements.
+        slots[0].show(hideTime: popupTime)  //On prend le premier élément de notre liste
         
-        slots.shuffle()
-        slots[0].show(hideTime: popupTime)
-        
-        
+        //On veut faire apparaitre les cibles dans plusieurs fenêtre et pas seulement dans la première
+        //On fait appelle à la méthode show()
         if (0...12).random > 4 {slots[1].show(hideTime: popupTime)}
         if (0...12).random > 8 {slots[2].show(hideTime: popupTime)}
         if (0...12).random > 10 {slots[3].show(hideTime: popupTime)}
         if (0...12).random > 11 {slots[4].show(hideTime: popupTime)}
-        if (0...12).random > 50 {slots[5].show(hideTime: popupTime)}
  
         
-        /*
-        if Int(arc4random()) * (12) > 1 {slots[1].show(hideTime: popupTime)}
-        if Int(arc4random()) * (12) > 4 {slots[2].show(hideTime: popupTime)}
-        if Int(arc4random()) * (12) > 7 {slots[3].show(hideTime: popupTime)}
-        if Int(arc4random()) * (12) > 10 {slots[4].show(hideTime: popupTime)}
-        */
         
-        let minDelay = popupTime / 2.5
+        let minDelay = popupTime / 2.0
         let maxDelay = popupTime * 2
         let delay = Double(arc4random_uniform(UInt32(minDelay + maxDelay)))
         //let delay = Double(arc4random()) * (minDelay - maxDelay)
         
+        
+        //DispatchQueue manages the execution of work items. Each work item submitted to a queue is processed on a pool of threads managed by the system.
+        //asyncAfter Submits a work item to a dispatch queue for asynchronous execution after a specified time.
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             self?.createEnemy()
         }

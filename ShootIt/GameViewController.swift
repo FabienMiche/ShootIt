@@ -16,7 +16,7 @@ class GameViewController: UIViewController {
     @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var resumeButton: UIButton!
     
-    
+    var gameScene: GameScene = GameScene()
     
     var slots = [WhackSlot]()
     
@@ -66,6 +66,7 @@ class GameViewController: UIViewController {
         skView.scene?.isPaused = true
         pauseButton.isHidden = true
         resumeButton.isHidden = false
+        gameScene.chrono.invalidate()
     }
     
     
