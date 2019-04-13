@@ -47,7 +47,7 @@ class WhackSlot: SKNode{
         isVisible = true
         isHit = false
         
-        if arc4random_uniform(3) == 0 {                                 //arc4randdom sert pour la génération aléatoire, l'intervalle maxomum est précisé entre parenthèse, ici de 0 à 2, 3 exclus
+        if arc4random_uniform(3) == 0 {                                 //arc4randdom sert pour la génération aléatoire, l'intervalle maximum est précisé entre parenthèse, ici de 0 à 2, 3 exclus
             charNode.texture = SKTexture(imageNamed: "good")        //On change nos images
             charNode.name = "charFriend"
         } else {
