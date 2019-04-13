@@ -11,9 +11,9 @@ import UIKit
 //Le Slot correspond aux fenêtres
 
 class WhackSlot: SKNode{
-    var charNode: SKSpriteNode! //SKSpriteNode permet de dessiner des ojets
+    var charNode: SKSpriteNode! //SKSpriteNode permet de dessiner des objets
     
-    var isVisible = false       //Variable booléenne testant la visiblité des objets
+    var isVisible = false       //Variable booléenne testant la visibilité des objets
     var isHit = false           //Variable booléenne testant si l'objet a été touché : ennemis ou alliés
     
     func configure(at position: CGPoint){
@@ -23,13 +23,13 @@ class WhackSlot: SKNode{
         addChild(sprite)
         
         let cropNode = SKCropNode()                             //SKCropNode va servir de masque pour cacher nos objets
-        cropNode.position = CGPoint(x:0, y:-12)                  //On positionne notre masque
+        cropNode.position = CGPoint(x:0, y:-12)                 //On positionne notre masque
         cropNode.zPosition = 1
         cropNode.maskNode = SKSpriteNode(imageNamed: "mask")    //On importe notre masque
         
-        charNode = SKSpriteNode(imageNamed: "good")         //On importe notre objet
+        charNode = SKSpriteNode(imageNamed: "good")             //On importe notre objet
         charNode.position = CGPoint(x: 0 , y: -88)              //On positionne notre objet
-        //charNode.name = "character"                             //On lui donne un nom qui servira plus
+        //charNode.name = "character"                           
         cropNode.addChild(charNode)
         
         addChild(cropNode)
@@ -43,11 +43,11 @@ class WhackSlot: SKNode{
         charNode.xScale = 1
         charNode.yScale = 1
         
-        charNode.run(SKAction.moveBy(x: 0, y: 88, duration: 0.05))      //SKAction.moveBy pertmet de bouger un élément, ici nos personnages, à certaines coordonnées et pendant une durée
+        charNode.run(SKAction.moveBy(x: 0, y: 88, duration: 0.05))      //SKAction.moveBy permet de bouger un élément, ici nos personnages, à certaines coordonnées et pendant une durée
         isVisible = true
         isHit = false
         
-        if arc4random_uniform(3) == 0 {                                 //arc4randdom sert pour la génération alétaoire, l'intervalle maxomum est précisé entre parenthèse, ici de 0 à 2, 3 exclus
+        if arc4random_uniform(3) == 0 {                                 //arc4randdom sert pour la génération aléatoire, l'intervalle maxomum est précisé entre parenthèse, ici de 0 à 2, 3 exclus
             charNode.texture = SKTexture(imageNamed: "good")        //On change nos images
             charNode.name = "charFriend"
         } else {
@@ -61,7 +61,7 @@ class WhackSlot: SKNode{
     }
     
     
-    //La function hide() permet de cacher nos images après une certaine durée
+    //La méthode hide() permet de cacher nos images après une certaine durée
     //On fait appel à .moveBy comme précédemment
     func hide() {
         if !isVisible { return }
