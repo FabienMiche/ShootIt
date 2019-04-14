@@ -79,14 +79,14 @@ class GameScene: SKScene {
         }
     }
     
-    var chrono = Timer()            //On déclare une variable chrono qui est Timer, cela nous permettra de gérer plusieurs paramètres plus bas comme le nombre de secondes entre les déclenchements du timer
+    var chrono = Timer()            //On déclare une variable chrono qui est un Timer, cela nous permettra de gérer plusieurs paramètres plus bas comme le nombre de secondes entre les déclenchements du timer
 
 
 
     override func didMove(to view: SKView) {
         
         //On place ici l'arrière plan de notre jeu
-        let background = SKSpriteNode(imageNamed: "FINAL_Building_NoWindows")   //SKSpriteNote est un élémen graphique qui peut être initialisé à partir d'une image ou d'une couleur unie. imageNamed initialise une image-objet texturée à l'aide d'un fichier image
+        let background = SKSpriteNode(imageNamed: "FINAL_Building_NoWindows")   //SKSpriteNote est un élément graphique qui peut être initialisé à partir d'une image ou d'une couleur unie. imageNamed initialise une image-objet texturée à l'aide d'un fichier image
         background.position = CGPoint(x: 0, y: 0)   //On définie les coordonnées de l'arrière plan
         background.blendMode = .replace             //blendeMode est une propriété qui décrit comment tous les "SpriteKit nodes" doivent être dessinés à l'écran. La valeur par défaut est ".alpha" qui signifie que l'image doit être dessiné pour que la transparence alpha soit respectée, on utilise ".replace" pour ignorer l'alpha dans la texture. Plus d'infos : https://www.hackingwithswift.com/example-code/games/how-to-made-an-skspritenode-render-faster-using-blendmode
         background.zPosition = -1
@@ -156,7 +156,7 @@ class GameScene: SKScene {
     
     //Méthode qui permet de générer les fenêtres
     func createSlot(at position: CGPoint) {
-        let slot = WhackSlot()      //On référencie notre ficher WhackSlot.swift
+        let slot = WhackSlot()      //On appelle notre ficher WhackSlot.swift
         slot.configure(at: position)
         addChild(slot)
         slots.append(slot)
@@ -200,7 +200,7 @@ class GameScene: SKScene {
         slots.shuffle()                     //Randomizes the order of an array’s elements.
         slots[0].show(hideTime: popupTime)  //On prend le premier élément de notre liste
         
-        //On veut faire apparaitre les cibles dans plusieurs fenêtre et pas seulement dans la première
+        //On veut faire apparaître les cibles dans plusieurs fenêtre et pas seulement dans la première
         //On fait appelle à la méthode show()
         if (0...12).random > 4 {slots[1].show(hideTime: popupTime)}
         if (0...12).random > 8 {slots[2].show(hideTime: popupTime)}

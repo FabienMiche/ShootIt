@@ -23,13 +23,13 @@ class WhackSlot: SKNode{
         addChild(sprite)
         
         let cropNode = SKCropNode()                             //SKCropNode va servir de masque pour cacher nos objets
-        cropNode.position = CGPoint(x:0, y:-12)                  //On positionne notre masque
+        cropNode.position = CGPoint(x:0, y:-12)                 //On positionne notre masque
         cropNode.zPosition = 1
         cropNode.maskNode = SKSpriteNode(imageNamed: "mask")    //On importe notre masque
         
-        charNode = SKSpriteNode(imageNamed: "good")         //On importe notre objet
+        charNode = SKSpriteNode(imageNamed: "good")             //On importe notre objet
         charNode.position = CGPoint(x: 0 , y: -88)              //On positionne notre objet
-        //charNode.name = "character"                             //On lui donne un nom qui servira plus
+        //charNode.name = "character"                           
         cropNode.addChild(charNode)
         
         addChild(cropNode)
@@ -61,7 +61,7 @@ class WhackSlot: SKNode{
     }
     
     
-    //La function hide() permet de cacher nos images après une certaine durée
+    //La méthode hide() permet de cacher nos images après une certaine durée
     //On fait appel à .moveBy comme précédemment
     func hide() {
         if !isVisible { return }
