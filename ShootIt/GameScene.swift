@@ -10,7 +10,7 @@ import SpriteKit
 import Foundation
 
 //Les instructions ci-dessous sont nécessaires au bon fonctionnement de l'utilisation de Random
-//On peut maintenant générer des valeurs de type Double de façon alétoires
+//On peut maintenant générer des valeurs de type Double de façon aléatoires
 //Sans ses instructions on obtient des erreurs
 
 extension Range where Bound == Int {
@@ -41,7 +41,7 @@ extension Double {
     }
 }
 
-//Les instructions ci-dessous permmet de "suffle" un array
+//Les instructions ci-dessous permet de "shuffle" un array
 //Shuffle est une méthode permettant de réorganiser les éléments d'un array
 
 extension Array
@@ -79,7 +79,7 @@ class GameScene: SKScene {
         }
     }
     
-    var chrono = Timer()            //On déclare une variable chrono qui est Timer, cela nous permettra de gérer plusieurs paramètre plus bas comme le nombre de secondes entre les déclenchements du timer
+    var chrono = Timer()            //On déclare une variable chrono qui est Timer, cela nous permettra de gérer plusieurs paramètres plus bas comme le nombre de secondes entre les déclenchements du timer
 
 
 
@@ -87,7 +87,7 @@ class GameScene: SKScene {
         
         //On place ici l'arrière plan de notre jeu
         let background = SKSpriteNode(imageNamed: "FINAL_Building_NoWindows")   //SKSpriteNote est un élémen graphique qui peut être initialisé à partir d'une image ou d'une couleur unie. imageNamed initialise une image-objet texturée à l'aide d'un fichier image
-        background.position = CGPoint(x: 0, y: 0)   //On définie les coordonées de l'arrière plan
+        background.position = CGPoint(x: 0, y: 0)   //On définie les coordonnées de l'arrière plan
         background.blendMode = .replace             //blendeMode est une propriété qui décrit comment tous les "SpriteKit nodes" doivent être dessinés à l'écran. La valeur par défaut est ".alpha" qui signifie que l'image doit être dessiné pour que la transparence alpha soit respectée, on utilise ".replace" pour ignorer l'alpha dans la texture. Plus d'infos : https://www.hackingwithswift.com/example-code/games/how-to-made-an-skspritenode-render-faster-using-blendmode
         background.zPosition = -1
         addChild(background)                                //On ajoute l'arrière plan à notre ViewController, ici GameViewController
@@ -129,7 +129,7 @@ class GameScene: SKScene {
     }
     
     //La méthode touhesBegan est une méthode généré lors de la création du projet
-    //Cet méthode gère la détection d'appuie sur l'écran
+    //Cet méthode gère la détection d'appui sur l'écran
     //On testera également, en parcourant la liste de tous les "node", si l'utilisateur a touché une bonne ou une mauvaise cible.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -184,7 +184,7 @@ class GameScene: SKScene {
             }, completion: { completed in
                 
             })
-            return      //Return est important, sans lui le jeu continue de tourner (les cibles vont continuer à apparaitre
+            return      //Return est important, sans lui le jeu continue de tourner (les cibles vont continuer à apparaître
         }
     }
     
